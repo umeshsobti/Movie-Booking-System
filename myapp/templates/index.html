@@ -1,0 +1,177 @@
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Booking System</title>
+  </head>
+  <style>
+    input {
+      height: 20px;
+      width: 20vw;
+    }
+    body {
+      background: #000;
+      color: white;
+    }
+    .board {
+      border-spacing: 12px;
+    }
+    .board td {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      border: 1px solid black;
+      border-radius: 14px;
+    }
+    .white {
+      color: #000;
+    }
+
+    #container {
+      display: flex;
+      width: 99vw;
+      align-items: center;
+      justify-content: center;
+    }
+    .label {
+      display: flex;
+      flex-direction: column;
+    }
+    button {
+      padding: 10px;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    button:hover {
+      background: #000;
+      color: #fff;
+      border: 1px solid white;
+    }
+    select {
+      height: 25px;
+      width: 280px;
+    }
+    #main_wrapper{
+      display: flex;
+      justify-content: space-between;
+    }
+    form{
+      margin-left: 30px;
+    }
+  </style>
+  <body>
+    <h1>Welcome to Movie Booking System!</h1>
+    <div id="main_wrapper">
+      <form action="{% url 'save_movie' %}" method="post">
+        {% csrf_token %}
+        <div class="label">
+          <label for="name">Enter Your Name: </label>
+          <input
+            type="text"
+            id="name"
+            name="person_name"
+            placeholder="Enter Your name"
+          />
+        </div>
+  
+        <br />
+        <br />
+  
+        <div class="label">
+          <label for="contact">Enter Your Contact Number: </label>
+          <input
+            type="text"
+            id="contact"
+            name="contact_number"
+            placeholder="Enter Contact Number Here"
+          />
+        </div>
+        <br />
+        <br />
+  
+        <div class="label">
+          <label for="tickets">Enter Number of Tickets Required: </label>
+          <select
+            name="number_of_tickets"
+            id="tickets"
+            placeholder="Enter Number of Tickets Required"
+            onchange="logValue()"
+          >
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <br />
+        <br />
+        <button type="submit">Submit Details</button>
+      </form>
+      
+      <h2>Date: {{current_date}}</h2>
+    </div>
+    <br />
+    <br />
+    {% load custom_tags %} {% with counter=0 %}
+    <div id="container">
+      <table class="board">
+        {% for i in "ABCDE" %}
+        <tr>
+          <th>{{i}}</th>
+          {% for j in "1234567891011" %}
+          <td
+            class="white"
+            style="background-color: white; cursor: pointer"
+            onclick="changeColor(this)"
+          >
+            {% increment_counter counter as counter %} {{ counter }}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endwith %}
+    <script>
+      let selectedTickets = 1; // Default value
+  
+      function logValue() {
+
+        const ticketsDropdown = document.getElementById("tickets");
+        selectedTickets = parseInt(ticketsDropdown.value);
+        console.log(selectedTickets)
+        reset();
+        
+
+      }
+      function reset(){
+       let boxes = document.getElementsByClassName("white");
+       for(let i = 0; i<boxes.length; i++){
+        boxes[i].style.backgroundColor = "white";
+        boxes[i].style.color = "black";
+       }
+      }
+      function changeColor(cell) {
+        if (cell.style.backgroundColor == "white" && selectedTickets > 0) {
+          cell.style.backgroundColor = "red";
+          cell.style.color = "white";
+          selectedTickets--;
+        } else if (cell.style.backgroundColor == "red") {
+          cell.style.backgroundColor = "white";
+          cell.style.color = "black";
+          selectedTickets++;
+        }
+      }
+    </script>
+  </body>
+</html>

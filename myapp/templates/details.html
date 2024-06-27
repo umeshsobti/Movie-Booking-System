@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+</head>
+<body>
+    {% for data in movie %}
+    Person Name: {{data.person_name}} <br>
+    Contact Number: {{data.contact_number}} <br>
+    Number of Tickets: {{data.no_of_tickets}}
+    Date: {{date}} <br/> <br/>
+    {% endfor %}
+</body>
+</html>
