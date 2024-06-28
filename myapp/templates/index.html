@@ -62,6 +62,11 @@
     form{
       margin-left: 30px;
     }
+    .disabled {
+        background-color: gray; /* Or any other style to indicate disabled */
+        color: #666; /* Adjust as needed */
+        cursor: not-allowed;
+    }
   </style>
   <body>
     <h1>Welcome to Movie Booking System!</h1>
@@ -96,7 +101,7 @@
         <div class="label">
           <label for="tickets">Enter Number of Tickets Required: </label>
           <select
-            name="number_of_tickets"
+            name="no_of_tickets"
             id="tickets"
             placeholder="Enter Number of Tickets Required"
             onchange="logValue()"
@@ -115,6 +120,7 @@
         </div>
         <br />
         <br />
+        <div id = "selected_ticket_container"></div>
         <button type="submit">Submit Details</button>
       </form>
       
@@ -129,13 +135,19 @@
         <tr>
           <th>{{i}}</th>
           {% for j in "1234567891011" %}
-          <td
-            class="white"
-            style="background-color: white; cursor: pointer"
-            onclick="changeColor(this)"
-          >
-            {% increment_counter counter as counter %} {{ counter }}
-          </td>
+          {% increment_counter counter as counter %}
+          {% if i|add:''|add:counter in booked_tickets %}
+            <td
+            style="background-color: #666;">
+                {{ counter }}
+            </td>
+            {% else %}
+            <td class="white"
+                style="background-color: white; cursor: pointer"
+                onclick="changeColor(this, '{{ i }}{{ counter }}')">
+                {{ counter }}
+            </td>
+            {% endif %}
           {% endfor %}
         </tr>
         {% endfor %}
@@ -144,15 +156,12 @@
     {% endwith %}
     <script>
       let selectedTickets = 1; // Default value
-  
+      let selectedTicketNumbers = [];
       function logValue() {
-
         const ticketsDropdown = document.getElementById("tickets");
         selectedTickets = parseInt(ticketsDropdown.value);
         console.log(selectedTickets)
         reset();
-        
-
       }
       function reset(){
        let boxes = document.getElementsByClassName("white");
@@ -160,17 +169,34 @@
         boxes[i].style.backgroundColor = "white";
         boxes[i].style.color = "black";
        }
+       updateSelectedTicketContainer()
       }
-      function changeColor(cell) {
+      function changeColor(cell,ticketNumber) {
         if (cell.style.backgroundColor == "white" && selectedTickets > 0) {
           cell.style.backgroundColor = "red";
           cell.style.color = "white";
           selectedTickets--;
+          selectedTicketNumbers.push(ticketNumber);
         } else if (cell.style.backgroundColor == "red") {
           cell.style.backgroundColor = "white";
           cell.style.color = "black";
           selectedTickets++;
+          selectedTicketNumbers = selectedTicketNumbers.filter(num => num!=ticketNumber)
         }
+        updateSelectedTicketContainer()
+        
+      }
+      function updateSelectedTicketContainer(){
+        const container = document.getElementById("selected_ticket_container");
+        container.innerHTML = "";
+        selectedTicketNumbers.forEach(ticketNumber=>{
+          console.log("Ticket Number: ",ticketNumber);
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "selected_tickets";
+          input.value = ticketNumber;
+          container.appendChild(input);
+        })
       }
     </script>
   </body>
