@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.template import loader
-from .models import Movie
-from.models import Tickets
+from .models import Movie, Tickets
 from datetime import datetime
+
 def main(request):
     current_date = datetime.now()
-    return render(request,'index.html',{'current_date': current_date})
+    booked_date = Tickets.objects.filter(booking_date=current_date).values_list('number', flat=True)
+    return render(request, 'index.html',{'current_date': current_date,'booked_date':booked_date})
 
 def save_movie(request):
     if request.method == "POST":
@@ -15,18 +15,21 @@ def save_movie(request):
         no_of_tickets = request.POST.get('no_of_tickets')
         ticket_number = request.POST.getlist('selected_tickets')
         
-        movie = Movie(title = "Movie Name",person_name=person_name, no_of_tickets = no_of_tickets, contact_number=contact_number)
+        movie = Movie(
+            title="Movie Name",
+            person_name=person_name, 
+            no_of_tickets=no_of_tickets, 
+            contact_number=contact_number
+        )
         movie.save()
         
         for seat_number in ticket_number:
             Tickets.objects.create(movie=movie, number=seat_number)
-        movies_data = Movie.objects.all()
         
-        all_tickets = Tickets.objects.all()
-
-        # Extract numbers from each ticket
-        booked_tickets = [ticket.number for ticket in all_tickets]
-
-        return render(request, 'index.html', {'booked_tickets': list(booked_tickets)}) 
+        last_movie = Movie.objects.last()
+        print(last_movie,'last_movie')
+        ticket_details = last_movie.tickets.all()
+        print(ticket_details,'ticket_details')
+        return render(request, 'details.html', {'movies_data': last_movie, 'ticket_details': ticket_details})
     
     return render(request, 'details.html')

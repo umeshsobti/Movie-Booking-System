@@ -5,12 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details</title>
 </head>
-<body>
-    {% for data in movie %}
-    Person Name: {{data.person_name}} <br>
-    Contact Number: {{data.contact_number}} <br>
-    Number of Tickets: {{data.no_of_tickets}}
-    Date: {{date}} <br/> <br/>
+<style>
+    body{
+        background-color: #000;
+        color: #fff;
+    }
+</style>
+<body> 
+    <h2>Congratulations! Your Movie Ticket has been booked</h2>
+   <p> Person Name: {{movies_data.person_name}}</p>
+   <p> Contact Number: {{movies_data.contact_number}}</p>
+    <p>Number of Tickets: {{movies_data.no_of_tickets}}</p> 
+    <p>Ticket Number:       
+    {% for i in ticket_details %}
+        {{i.number}}
     {% endfor %}
+    </p>
+ <br/> <br/>
 </body>
 </html>
