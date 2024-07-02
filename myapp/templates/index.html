@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Booking System</title>
     <style>
+        *{
+            box-sizing: border-box;
+        }
         input {
             height: 20px;
             width: 20vw;
@@ -34,7 +37,7 @@
         }
         #container {
             display: flex;
-            width: 99vw;
+            width: calc(100vw-10px);
             align-items: center;
             justify-content: center;
         }
@@ -42,19 +45,19 @@
             display: flex;
             flex-direction: column;
         }
-        button {
+        #button {
             padding: 10px;
             border: 1px solid transparent;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        button:hover {
+        #button:hover {
             background: #000;
             color: #fff;
             border: 1px solid white;
         }
-        select {
+        #tickets {
             height: 25px;
             width: 280px;
         }
@@ -62,7 +65,7 @@
             display: flex;
             justify-content: space-between;
         }
-        form {
+        #form {
             margin-left: 30px;
         }
         .disabled{
@@ -72,9 +75,10 @@
     </style>
 </head>
 <body>
+    
     <h1>Welcome to Movie Booking System!</h1>
     <div id="main_wrapper">
-        <form action="{% url 'save_movie' %}" method="post">
+        <form action="{% url 'save_movie' %}" id="form" method="post">
             {% csrf_token %}
             <div class="label">
                 <label for="name">Enter Your Name: </label>
@@ -105,14 +109,20 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
+            </div> <br> <br>
+            <div class="date">
+                <label for="date">Select date: </label> <br> 
+                <input type="date" id="date" name="booking_date"> <br> <br>
             </div>
             <br />
             <br />
             <div id="selected_ticket_container"></div>
-            <button type="submit">Submit Details</button>
+            <button id="button" type="submit">Submit Details</button>
         </form>
-
-        <h2>Date: {{ current_date }}</h2>
+<div>
+    
+    <h2>Date: {{ current_date }}</h2>
+</div>
     </div>
     <br />
     <br />
@@ -143,7 +153,6 @@
             {% endwith %}
             {% endfor %}
         </table>    
-        
     </div>
     
     <script>
@@ -191,6 +200,20 @@
                 container.appendChild(input); 
             });
         }
+
+        let today = new Date().toISOString().split('T')[0];
+        
+        // Set the min attribute of the date input to today's date
+        let date_valid = document.getElementById('date');
+        date_valid.setAttribute('min', today);
+        let currentDate = new Date();
+        let daysUntilThursday = (4 - currentDate.getDay() + 7) % 7;
+        
+        let nextThursday = new Date();
+        nextThursday.setDate(currentDate.getDate() + daysUntilThursday);
+        nextThursday = nextThursday.toISOString().split('T')[0];
+
+        date_valid.setAttribute('max', nextThursday);
     </script>
 </body>
 </html>
