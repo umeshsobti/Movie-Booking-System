@@ -2,11 +2,21 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Movie, Tickets
 from datetime import datetime
+from rest_framework import generics
+from .serializers import TicketSerializers
+
+class TicketListAPIView(generics.ListAPIView):
+    serializer_class =  TicketSerializers
+    def get_queryset(self):
+        booking_date = self.request.query_params.get('booking_date')
+        if(booking_date):
+            return Tickets.objects.filter(booking_date=booking_date)
+        return Tickets.objects.all()
 
 def main(request):
-    selected_date = request.GET.get('date', datetime.now().date())
-    booked_date = Tickets.objects.filter(booking_date=selected_date).values_list('number', flat=True)
-    return render(request, 'index.html', {'current_date': selected_date, 'booked_date': booked_date})
+    current_date = datetime.now().date()
+    booked_date = Tickets.objects.filter(booking_date=current_date).values_list('number', flat=True)
+    return render(request, 'index.html', {'current_date': current_date, 'booked_date': booked_date})
  
 def save_movie(request):
     if request.method == "POST":
@@ -24,7 +34,7 @@ def save_movie(request):
         movie.save()
         
         for seat_number in ticket_number:
-            Tickets.objects.create(movie=movie, number=seat_number,booking_date =booking_date)
+            Tickets.objects.create(movie=movie, number=seat_number,booking_date=booking_date)
         
         last_movie = Movie.objects.last()
         print(last_movie,'last_movie')
@@ -33,3 +43,4 @@ def save_movie(request):
         return render(request, 'details.html', {'movies_data': last_movie, 'ticket_details': ticket_details})
     
     return render(request, 'details.html')
+

@@ -1,133 +1,150 @@
 {% load tz %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Booking System</title>
     <style>
-        *{
-            box-sizing: border-box;
-        }
-        input {
-            height: 20px;
-            width: 20vw;
-        }
-        body {
-            background: #000;
-            color: white;
-        }
-        .board {
-            border-spacing: 12px;
-        }
-        .board td {
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            border: 1px solid black;
-            border-radius: 14px;
-        }
-        .white {
-            color: #000;
-        }
-        .booked {
-            background-color: gray !important;
-            color: white;
-            pointer-events: none;
-        }
-        #container {
-            display: flex;
-            width: calc(100vw-10px);
-            align-items: center;
-            justify-content: center;
-        }
-        .label {
-            display: flex;
-            flex-direction: column;
-        }
-        #button {
-            padding: 10px;
-            border: 1px solid transparent;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        #button:hover {
-            background: #000;
-            color: #fff;
-            border: 1px solid white;
-        }
-        #tickets {
-            height: 25px;
-            width: 280px;
-        }
-        #main_wrapper {
-            display: flex;
-            justify-content: space-between;
-        }
-        #form {
-            margin-left: 30px;
-        }
-        .disabled{
-            background-color: gray;
-            cursor:not-allowed;
-        }
+      * {
+        box-sizing: border-box;
+      }
+      input {
+        height: 20px;
+        width: 20vw;
+      }
+      body {
+        background: #000;
+        color: white;
+      }
+      .board {
+        border-spacing: 12px;
+      }
+      .board td {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 14px;
+      }
+      .white {
+        color: #000;
+      }
+      .booked {
+        background-color: gray !important;
+        color: white;
+        pointer-events: none;
+      }
+      #container {
+        display: flex;
+        width: calc(100vw-10px);
+        align-items: center;
+        justify-content: center;
+      }
+      .label {
+        display: flex;
+        flex-direction: column;
+      }
+      #button {
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      #button:hover {
+        background: #000;
+        color: #fff;
+        border: 1px solid white;
+      }
+      #tickets {
+        height: 25px;
+        width: 280px;
+      }
+      #main_wrapper {
+        display: flex;
+        justify-content: space-between;
+      }
+      #form {
+        margin-left: 30px;
+      }
+      .disabled {
+        background-color: gray;
+        cursor: not-allowed;
+      }
     </style>
-</head>
-<body>
-    
+  </head>
+  <body>
     <h1>Welcome to Movie Booking System!</h1>
     <div id="main_wrapper">
-        <form action="{% url 'save_movie' %}" id="form" method="post">
-            {% csrf_token %}
-            <div class="label">
-                <label for="name">Enter Your Name: </label>
-                <input type="text" id="name" name="person_name" placeholder="Enter Your name" />
-            </div>
+      <form action="{% url 'save_movie' %}" id="form" method="post">
+        {% csrf_token %}
+        <div class="label">
+          <label for="name">Enter Your Name: </label>
+          <input
+            type="text"
+            id="name"
+            name="person_name"
+            placeholder="Enter Your name"
+          />
+        </div>
 
-            <br />
-            <br />
+        <br />
+        <br />
 
-            <div class="label">
-                <label for="contact">Enter Your Contact Number: </label>
-                <input type="text" id="contact" name="contact_number" placeholder="Enter Contact Number Here" />
-            </div>
-            <br />
-            <br />
+        <div class="label">
+          <label for="contact">Enter Your Contact Number: </label>
+          <input
+            type="text"
+            id="contact"
+            name="contact_number"
+            placeholder="Enter Contact Number Here"
+          />
+        </div>
+        <br />
+        <br />
 
-            <div class="label">
-                <label for="tickets">Enter Number of Tickets Required: </label>
-                <select name="no_of_tickets" id="tickets" onchange="logValue()">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
-            </div> <br> <br>
-            <div class="date">
-                <label for="date">Select date: </label> <br> 
-                <input type="date" id="date" name="booking_date"> <br> <br>
-            </div>
-            <br />
-            <br />
-            <div id="selected_ticket_container"></div>
-            <button id="button" type="submit">Submit Details</button>
-        </form>
-<div>
-    
-    <h2>Date: {{ current_date }}</h2>
-</div>
+        <div class="label">
+          <label for="tickets">Enter Number of Tickets Required: </label>
+          <select name="no_of_tickets" id="tickets" onchange="logValue()">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <br />
+        <br />
+        <div class="date">
+          <label for="date">Select date: </label> <br />
+          <input
+            type="date"
+            id="date"
+            name="booking_date"
+            onchange="changeDate()"
+          />
+          <br />
+          <br />
+        </div>
+        <br />
+        <br />
+        <div id="selected_ticket_container"></div>
+        <button id="button" type="submit">Submit Details</button>
+      </form>
+      <div>
+        <h2>Date: {{ current_date }}</h2>
+      </div>
     </div>
     <br />
     <br />
     {% load custom_tags %}
-    
+
     <div id="container">
         <table class="board">
             {% for i in "ABCDE" %}
@@ -138,15 +155,12 @@
                 {% for j in my_range %}
                 {% increment_counter counter as counter %}
                 {% with ticket_id=i|add_str:j %}
-                    {% if ticket_id in booked_date %}
-                    <td class="disabled">{{ counter }}</td>
-                    {% else %}
-                    <td class="white"
-                        style="background-color: white; cursor: pointer"
-                        onclick="changeColor(this, '{{ ticket_id }}')">
-                        {{ counter }}
-                    </td>
-                    {% endif %}
+                <td class="white"
+                    data-ticket-id="{{ ticket_id }}"
+                    style="background-color: white; cursor: pointer"
+                    onclick="changeColor(this, '{{ ticket_id }}')">
+                    {{ counter }}
+                </td>
                 {% endwith %}
                 {% endfor %}
             </tr>
@@ -154,66 +168,117 @@
             {% endfor %}
         </table>    
     </div>
-    
+
     <script>
-        let selectedTickets = 1; // Default value
-        let selectedTicketNumbers = [];
-        function logValue() {
-            const ticketsDropdown = document.getElementById("tickets");
-            selectedTickets = parseInt(ticketsDropdown.value);
-            console.log(selectedTickets);
-            reset();
+      
+
+      let selectedTickets = 1;
+      let selectedTicketNumbers = [];
+      function logValue() {
+        const ticketsDropdown = document.getElementById("tickets");
+        selectedTickets = parseInt(ticketsDropdown.value);
+        console.log(selectedTickets);
+        reset();
+      }
+      function reset() {
+        let boxes = document.getElementsByClassName("white");
+        for (let i = 0; i < boxes.length; i++) {
+          if (!boxes[i].classList.contains("booked")) {
+            boxes[i].style.backgroundColor = "white";
+            boxes[i].style.color = "black";
+          }
         }
-        function reset() {
-            let boxes = document.getElementsByClassName("white");
-            for (let i = 0; i < boxes.length; i++) {
-                if (!boxes[i].classList.contains('booked')) {
-                    boxes[i].style.backgroundColor = "white";
-                    boxes[i].style.color = "black";
+        updateSelectedTicketContainer();
+      }
+      function changeColor(cell, ticketNumber) {
+        if (cell.style.backgroundColor == "white" && selectedTickets > 0) {
+          cell.style.backgroundColor = "red";
+          cell.style.color = "white";
+          selectedTickets--;
+          selectedTicketNumbers.push(ticketNumber);
+        } else if (cell.style.backgroundColor == "red") {
+          cell.style.backgroundColor = "white";
+          cell.style.color = "black";
+          selectedTickets++;
+          selectedTicketNumbers = selectedTicketNumbers.filter(
+            (num) => num != ticketNumber
+          );
+        }
+        updateSelectedTicketContainer();
+      }
+      function updateSelectedTicketContainer() {
+        const container = document.getElementById("selected_ticket_container");
+        container.innerHTML = "";
+        selectedTicketNumbers.forEach((ticketNumber) => {
+          console.log("Ticket Number: ", ticketNumber);
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "selected_tickets";
+          input.value = ticketNumber;
+          container.appendChild(input);
+        });
+      }
+
+      let today = new Date().toISOString().split("T")[0];
+
+      // Set the min attribute of the date input to today's date
+      let date_valid = document.getElementById("date");
+      date_valid.setAttribute("min", today);
+      let currentDate = new Date();
+      let daysUntilThursday = (4 - currentDate.getDay() + 7) % 7;
+
+      let nextThursday = new Date();
+      nextThursday.setDate(currentDate.getDate() + daysUntilThursday);
+      nextThursday = nextThursday.toISOString().split("T")[0];
+
+      date_valid.setAttribute("max", nextThursday);
+
+      function changeDate() {
+        let bookingDate = document.getElementById("date").value;
+        console.log(bookingDate);
+        var url = "{% url 'tickets-list'%}?booking_date=" + bookingDate;
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data, "Data for the booked");
+
+            const bookedTickets = data.map((ticket) => ticket.number);  
+            console.log(bookedTickets, "Booked Ticket Numbers");
+
+            updateTable(bookedTickets);
+            
+          })
+          .catch((error) => {
+            // Log any errors that occur during the fetch process
+            console.error("Error fetching data:", error);
+          });
+      }
+
+      function updateTable(bookedTickets) {
+            // Fetch all cells of the table
+            const cells = document.querySelectorAll('.board td');
+
+            cells.forEach(cell => {
+                const ticketId = cell.getAttribute('data-ticket-id');
+
+                if (bookedTickets.includes(ticketId)) {
+
+                    cell.classList.add('disabled');
+                    cell.classList.remove('white');
+                    cell.style.backgroundColor = 'gray';
+                    cell.style.cursor = 'not-allowed';
+                    cell.onclick = null; // Disable click event
+                } else {
+                    
+                    cell.classList.remove('disabled');
+                    cell.classList.add('white');
+                    cell.style.backgroundColor = 'white';
+                    cell.style.cursor = 'pointer';
+                    cell.onclick = function() { changeColor(cell, ticketId); }; 
                 }
-            }
-            updateSelectedTicketContainer();
-        }
-        function changeColor(cell, ticketNumber) {
-            if (cell.style.backgroundColor == "white" && selectedTickets > 0) {
-                cell.style.backgroundColor = "red";
-                cell.style.color = "white";
-                selectedTickets--;
-                selectedTicketNumbers.push(ticketNumber);
-            } else if (cell.style.backgroundColor == "red") {
-                cell.style.backgroundColor = "white";
-                cell.style.color = "black";
-                selectedTickets++;
-                selectedTicketNumbers = selectedTicketNumbers.filter(num => num != ticketNumber);
-            }
-            updateSelectedTicketContainer();
-        }
-        function updateSelectedTicketContainer() {
-            const container = document.getElementById("selected_ticket_container");
-            container.innerHTML = "";
-            selectedTicketNumbers.forEach(ticketNumber => {
-                console.log("Ticket Number: ", ticketNumber);
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "selected_tickets";
-                input.value = ticketNumber;
-                container.appendChild(input); 
             });
         }
-
-        let today = new Date().toISOString().split('T')[0];
-        
-        // Set the min attribute of the date input to today's date
-        let date_valid = document.getElementById('date');
-        date_valid.setAttribute('min', today);
-        let currentDate = new Date();
-        let daysUntilThursday = (4 - currentDate.getDay() + 7) % 7;
-        
-        let nextThursday = new Date();
-        nextThursday.setDate(currentDate.getDate() + daysUntilThursday);
-        nextThursday = nextThursday.toISOString().split('T')[0];
-
-        date_valid.setAttribute('max', nextThursday);
     </script>
-</body>
+  </body>
 </html>
+
